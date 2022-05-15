@@ -23,7 +23,7 @@ class ScrollableText(Text):
         self.configure(yscrollcommand=vscroll.set)
         #   configure font for text
         self.tag_configure("font", font=('Arial', 10))
-        #   make widget non-editable without disabling int
+        #   make widget non-editable without disabling it
         self.bind("<Key>", lambda e: "break")
 
     def append_text(self, text):

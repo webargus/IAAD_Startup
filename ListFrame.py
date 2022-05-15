@@ -8,16 +8,25 @@
 
 from tkinter import *
 import tkinter.ttk as ttk
+from TreeViewTable import *
 
-
-class ListFrame(ttk.Treeview):
+class ListFrame():
 
     def __init__(self, frame):
 
-        super(ListFrame, self).__init__(frame)
+        self.frame = frame
+        self.table = None
 
     def listTable(self, columns):
+        # destrói tabela anterior, se existir
+        if(self.table is not None):
+            self.table.destroy();
         
-        for column in columns:
-            print(column)
+        # cria novo widget pra tabela
+        self.table = TreeViewTable(self.frame, columns)
+
+
+
+
+
 
