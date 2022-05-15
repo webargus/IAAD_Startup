@@ -1,6 +1,6 @@
 """
     Class ScrollableText
-    Authors: Edson Kropniczki + Cristina Oliveira - kropniczki@gmail.com - (c) Jun/2019
+    Authors: Edson Kropniczki - kropniczki@gmail.com - (c) Jun/2022
     Disclaimer: use it on your own risk!
     License: feel free to mess up with it at will, provided you display this header in your code!
 """

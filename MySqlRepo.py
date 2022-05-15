@@ -2,6 +2,10 @@
 
 import mysql.connector as connector
 
+class MySqlRepo:
+    
+    
+
 conn = connector.connect(
     host="localhost",
     username="iaad",
