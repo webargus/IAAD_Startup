@@ -7,6 +7,7 @@
 from textwrap import fill
 from tkinter import *
 from tkinter.ttk import *
+from MySqlRepo import *
 import ScrollableText
 import Tools
 
@@ -14,6 +15,10 @@ import Tools
 class Gui(Frame):
 
     def __init__(self):
+        
+        repo = MySqlRepo()
+        
+        
         Frame.__init__(self)
         Tools.Tools.root(self.master)
         Tools.Tools.center_window(self.master, 1120, 600)
@@ -34,7 +39,7 @@ class Gui(Frame):
         combo_label = Label(top_frame, text="Selecione a tabela:")
         combo_label.grid({"row": 0, "column": 0})
         
-        combo = Combobox(top_frame, values = ['a', 'b']);
+        combo = Combobox(top_frame, values = repo.execute("SHOW TABLES"));
         combo.grid({"row": 0, "column": 1})
         
         self.mainloop()
