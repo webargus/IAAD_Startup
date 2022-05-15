@@ -44,7 +44,7 @@ class Gui(Frame):
         
         # cria frame para listagem das tabelas do BD (Frame F2)
         list_frame = Frame(self)
-        list_frame.grid({"row": 1, "column": 0})
+        list_frame.grid({"row": 1, "column": 0, "sticky": NS})
         self.table = ListFrame(list_frame)
         
         # cria frame no topo da GUI contendo combo com nomes das tabelas
@@ -54,9 +54,14 @@ class Gui(Frame):
         combo_label = Label(top_frame, text="Selecione a tabela:")
         combo_label.grid({"row": 0, "column": 0})
         # cria combo
-        combo = Combobox(top_frame, values = self.repo.execute("SHOW TABLES"));
+        tables = self.repo.execute("SHOW TABLES")           # lê nomes das tabelas do BD
+        combo = Combobox(top_frame, values = tables);
         combo.grid({"row": 0, "column": 1})
+        # attach event listener -> lista tabela selecionada
         combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(combo.get()))
+        # seleciona a primeira tabela e lista
+        combo.set(tables[0][0])
+        self.listTable(tables[0][0])
         
         # console_frame.rowconfigure()
         self.mainloop()
