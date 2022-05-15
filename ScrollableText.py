@@ -27,7 +27,7 @@ class ScrollableText(Text):
         self.bind("<Key>", lambda e: "break")
 
     def append_text(self, text):
-        self.insert(END, text, 'font')
+        self.insert(END, text + "\n", 'font')
 
     def clear(self):
         self.delete('1.0', END)

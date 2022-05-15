@@ -8,16 +8,13 @@ from textwrap import fill
 from tkinter import *
 from tkinter.ttk import *
 from MySqlRepo import *
-import ScrollableText
+from ScrollableText import *
 import Tools
 
 
 class Gui(Frame):
 
     def __init__(self):
-        
-        repo = MySqlRepo()
-        
         
         Frame.__init__(self)
         Tools.Tools.root(self.master)
@@ -32,9 +29,17 @@ class Gui(Frame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         
+        # acrescenta console MySql (Frame F4)
+        console_frame = Frame(self)
+        console_frame.grid({"row": 1, "column": 0, "pady": 8})
+        self.console = ScrollableText(console_frame)
+        
+        # cria repositório MySql linkado com o console
+        repo = MySqlRepo(self.console)
+        
         top_frame = Frame(self)
         top_frame.grid({"row": 0, "column": 0})
-        top_frame.pack(padx=8, pady=8)
+        # top_frame.pack(padx=8, pady=8)
 
         combo_label = Label(top_frame, text="Selecione a tabela:")
         combo_label.grid({"row": 0, "column": 0})
