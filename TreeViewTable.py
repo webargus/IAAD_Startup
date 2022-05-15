@@ -17,7 +17,7 @@ class TreeViewTable(ttk.Treeview):
 
     def __init__(self, frame, headers):
         super(TreeViewTable, self).__init__(frame, columns=headers, selectmode='extended')
-        self.grid({"row": 0, "column": 0, "sticky": NSEW})
+        self.grid({"row": 0, "column": 0, "sticky": EW})
         #   acrescenta barra de rolagem
         tree_scroll = ttk.Scrollbar(frame, orient=VERTICAL, command=self.yview)
         tree_scroll.grid({"row": 0, "column": 1, "sticky": NS})
@@ -25,7 +25,7 @@ class TreeViewTable(ttk.Treeview):
         # insere cabeçalhos e define suas larguras
         for ix, header in enumerate(headers):
             self.heading("#{}".format(ix), text=header)
-            self.column("#{}".format(ix), minwidth=100, width=200, stretch=NO)
+            self.column("#{}".format(ix), minwidth=100, width=150, stretch=NO)
 
         self.callback_select = None
         self.bind('<<TreeviewSelect>>', self._handle_select)

@@ -25,24 +25,31 @@ class Gui(Frame):
         self.master.resizable(0, 0)
         self.master.state('normal')
         self.master.title("IAAD - Startups")
-        self.master.grid_rowconfigure(0, weight=1)
-        self.master.grid_columnconfigure(0, weight=1)
-        self.grid({"row": 0, "column": 0, "sticky": NSEW})
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
+        self.master.rowconfigure(0, weight=1)
+        self.master.columnconfigure(0, weight=1)
+
+        self.grid({"row": 0, "column": 0, "sticky": NSEW})      # needed for streching console horizontally
+        self.columnconfigure(0, weight=1)                       # needed for streching console horizontally
+        self.rowconfigure(0, weight=1)                
+        self.rowconfigure(1, weight=10)
+        self.rowconfigure(2, weight=1)
         
         # acrescenta console MySql (Frame F4)
         console_frame = Frame(self)
+        console_frame.grid({"row": 2, "column": 0, "pady": 8, "sticky": EW})
+        console_frame.columnconfigure(0, weight=1)              # needed for streching console horizontally
         self.console = ScrollableText(console_frame)
         # cria repositório MySql linkado com o console
         self.repo = MySqlRepo(self.console)
         
         # cria frame para listagem das tabelas do BD (Frame F2)
         list_frame = Frame(self)
+        list_frame.grid({"row": 1, "column": 0})
         self.table = ListFrame(list_frame)
         
         # cria frame no topo da GUI contendo combo com nomes das tabelas
         top_frame = Frame(self)
+        top_frame.grid({"row": 0, "column": 0})
         # rótulo para a combobox
         combo_label = Label(top_frame, text="Selecione a tabela:")
         combo_label.grid({"row": 0, "column": 0})
@@ -50,10 +57,7 @@ class Gui(Frame):
         combo = Combobox(top_frame, values = self.repo.execute("SHOW TABLES"));
         combo.grid({"row": 0, "column": 1})
         combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(combo.get()))
-
-        top_frame.grid({"row": 1, "column": 0})
-        list_frame.grid({"row": 0, "column": 0})
-        console_frame.grid({"row": 2, "column": 0, "pady": 8})
+        
         # console_frame.rowconfigure()
         self.mainloop()
         

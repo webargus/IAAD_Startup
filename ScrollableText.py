@@ -11,16 +11,16 @@ import tkinter.ttk as ttk
 
 class ScrollableText(Text):
 
-    def __init__(self, frame):
+    def __init__(self, frame, max_height = 5):
 
         super(ScrollableText, self).__init__(frame)
 
         #   position Text widget on the left side of frame
-        self.grid({"row": 0, "column": 0, "sticky": NSEW})
+        self.grid({"row": 0, "column": 0, "sticky": EW})
         #   add vertical scrollbar
         vscroll = ttk.Scrollbar(frame, orient=VERTICAL, command=self.yview)
         vscroll.grid({"row": 0, "column": 1, "sticky": NS})
-        self.configure(yscrollcommand=vscroll.set)
+        self.configure(yscrollcommand=vscroll.set, height=max_height)
         #   configure font for text
         self.tag_configure("font", font=('Arial', 10))
         #   make widget non-editable without disabling it
