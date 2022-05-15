@@ -2,7 +2,7 @@
     Description:
         Static reference to main window, including method to center window on screen
     Author:
-        Edson Kropniczki - (c) jul/2022 - all rights reserved
+        Group UFRPE - BSI - IAAD  - 2022.1
     License:
         keep this header in your copy and feel free to mess up with this code as you please;
         accretions and improvements are more than welcome! :)

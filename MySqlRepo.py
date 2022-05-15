@@ -32,9 +32,9 @@ class MySqlRepo:
             self.console.append_text("Erro: " + query)
             return False
     
-    def __del__ (self):
-        self.cursor.close()
-        self.conn.close()
+    # def __del__ (self):
+    #     self.cursor.close()
+    #     self.conn.close()
 
 
 
