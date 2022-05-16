@@ -11,8 +11,8 @@ class MySqlRepo:
             self.console = console
             # tenta conectar ao BD
             self.conn = connector.connect(host=host,
-                                          username= username,
-                                          password= password,
+                                          user= username,
+                                          passwd= password,
                                           database = database)
             # define cursor MySql para comandos/consultas
             self.cursor = self.conn.cursor()
