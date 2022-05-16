@@ -11,6 +11,7 @@ from tkinter.ttk import *
 from MySqlRepo import *
 from ScrollableText import *
 from ListFrame import *
+from FormFrame import *
 import Tools
 
 
@@ -28,28 +29,35 @@ class Gui(Frame):
         self.master.rowconfigure(0, weight=1)
         self.master.columnconfigure(0, weight=1)
 
-        self.grid({"row": 0, "column": 0, "sticky": NSEW})      # needed for streching console horizontally
-        self.columnconfigure(0, weight=1)                       # needed for streching console horizontally
+        self.grid({"row": 0, "column": 0, "sticky": NSEW})      # needed for stretching console horizontally
+        self.columnconfigure(0, weight=1)                       # needed for stretching console horizontally
         self.rowconfigure(0, weight=1)                
         self.rowconfigure(1, weight=10)
         self.rowconfigure(2, weight=1)
         
         # acrescenta console MySql (Frame F4)
         console_frame = Frame(self)
-        console_frame.grid({"row": 2, "column": 0, "pady": 8, "sticky": EW})
-        console_frame.columnconfigure(0, weight=1)              # needed for streching console horizontally
+        console_frame.grid({"row": 3, "column": 0, "pady": 8, "sticky": EW})
+        console_frame.columnconfigure(0, weight=1)              # needed for stretching console horizontally
         self.console = ScrollableText(console_frame)
         # cria repositório MySql linkado com o console
         self.repo = MySqlRepo(self.console)
         
         # cria frame para listagem das tabelas do BD (Frame F2)
         list_frame = Frame(self)
-        list_frame.grid({"row": 1, "column": 0, "sticky": NSEW})
-        list_frame.rowconfigure(0, weight=1)
-        list_frame.columnconfigure(0, weight=1)
+        list_frame.grid({"row": 1, "column": 0, "sticky": NSEW}) # sticky NSEW needed for horz/vert table stretching
+        list_frame.rowconfigure(0, weight=1)                     # needed for horz. + vert. treeview table stretching
+        list_frame.columnconfigure(0, weight=1)                  # needed for horz. + vert. treeview table stretching
         self.table = ListFrame(list_frame, self.repo)
         
-        # cria frame no topo da GUI contendo combo com nomes das tabelas
+        # cria frame para formulário de edição C.U.D. (Frame F3)
+        form_frame = Frame(self)
+        form_frame.grid({"row": 2, "column": 0, "sticky": NSEW})
+        form_frame.rowconfigure(0, weight=1)
+        form_frame.columnconfigure(0, weight=1)
+        self.form = FormFrame(form_frame, self.repo)
+        
+        # cria frame no topo da GUI contendo combo com nomes das tabelas (Frame F1)
         top_frame = Frame(self)
         top_frame.grid({"row": 0, "column": 0})
         # rótulo para a combobox
@@ -70,10 +78,14 @@ class Gui(Frame):
         self.mainloop()
         
     def listTable(self, table_name):
+        # executa consulta pra pegar nomes das colunas da tabela
         res = self.repo.execute("DESCRIBE " + table_name)
-        # chama método para listar a tabela com os nomes das colunas
         if(res):
-            self.table.listTable(table_name, (res[ix][0] for ix in range(0,len(res))))
+            # pega só nomes das colunas do resultado da consulta
+            columns = list((res[ix][0] for ix in range(0,len(res))))
+            # chama método para listar a tabela com os nomes das colunas
+            self.table.listTable(table_name, columns)
+            self.form.setForm(table_name, columns)
 
 if __name__ == '__main__':
     gui = Gui()

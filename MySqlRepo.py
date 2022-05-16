@@ -28,7 +28,6 @@ class MySqlRepo:
     def execute (self, query):
         
         try:
-            query
             self.console.append_text("Comando: " + query)
             self.cursor.execute(query)
             return self.cursor.fetchall()

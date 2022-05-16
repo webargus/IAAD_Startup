@@ -17,23 +17,23 @@ class TreeViewTable(ttk.Treeview):
 
     def __init__(self, frame, headers):
         super(TreeViewTable, self).__init__(frame, columns=headers, selectmode='browse')
-        self.grid({"row": 0, "column": 0, "sticky": NSEW})
-        self.rowconfigure(0, weight=1)
-        self.columnconfigure(0, weight=1)
+        self.grid({"row": 0, "column": 0, "sticky": NSEW})  # sticy param needed for horz. + vert. treeview table stretching
+        self.rowconfigure(0, weight=1)                      # needed for horz. + vert. treeview table stretching
+        self.columnconfigure(0, weight=1)                   # needed for horz. + vert. treeview table stretching
         #   acrescenta barra de rolagem
         tree_scroll = ttk.Scrollbar(frame, orient=VERTICAL, command=self.yview)
         tree_scroll.grid({"row": 0, "column": 1, "sticky": NS})
         self.configure(yscrollcommand=tree_scroll.set)
         # insere cabeçalhos e define suas larguras
         for ix, header in enumerate(headers):
-            self.heading("#{}".format(ix), text=header)
-            self.column("#{}".format(ix), minwidth=100, width=150, stretch=NO)
+            self.heading("#{}".format(ix), text=header, anchor=CENTER)
+            self.column("#{}".format(ix), minwidth=100, width=150, stretch=NO, anchor=CENTER)
 
         self.callback_select = None
         self.bind('<<TreeviewSelect>>', self._handle_select)
 
     def appendItem(self, data, pos='', iid=None):
-        self.insert(pos, 'end', iid, text=data[0], values=data[1:])
+        self.insert(pos, 'end', None, text=data[0], values=data[1:])
 
     def clear(self):
         self.delete(*self.get_children())
