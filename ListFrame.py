@@ -8,22 +8,30 @@
 
 from tkinter import *
 import tkinter.ttk as ttk
+from MySqlRepo import MySqlRepo
 from TreeViewTable import *
 
 class ListFrame():
 
-    def __init__(self, frame):
+    def __init__(self, frame, repo):
 
         self.frame = frame
+        self.repo = repo
         self.table = None
 
-    def listTable(self, columns):
+    def listTable(self, table_name, columns):
         # destrói tabela anterior, se existir
         if(self.table is not None):
             self.table.destroy();
         
         # cria novo widget pra tabela
         self.table = TreeViewTable(self.frame, columns)
+        
+        # insere dados
+        res = self.repo.execute("SELECT * FROM {}".format(table_name))
+        print(res)
+        for row in res:
+            self.table.appendItem(row, iid=row[0])
 
 
 

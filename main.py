@@ -45,7 +45,7 @@ class Gui(Frame):
         # cria frame para listagem das tabelas do BD (Frame F2)
         list_frame = Frame(self)
         list_frame.grid({"row": 1, "column": 0, "sticky": NS})
-        self.table = ListFrame(list_frame)
+        self.table = ListFrame(list_frame, self.repo)
         
         # cria frame no topo da GUI contendo combo com nomes das tabelas
         top_frame = Frame(self)
@@ -68,8 +68,8 @@ class Gui(Frame):
         
     def listTable(self, table_name):
         res = self.repo.execute("DESCRIBE " + table_name)
-        # chama o método para listar a tabela só com os nomes das colunas 
-        self.table.listTable((res[ix][0] for ix in range(0,len(res))))
+        # chama o método para listar a tabela com os nomes das colunas 
+        self.table.listTable(table_name, (res[ix][0] for ix in range(0,len(res))))
 
 if __name__ == '__main__':
     gui = Gui()
