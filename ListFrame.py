@@ -29,8 +29,9 @@ class ListFrame():
         
         # insere dados
         res = self.repo.execute("SELECT * FROM {}".format(table_name))
-        for row in res:
-            self.table.appendItem(row, iid=row[0])
+        if(res):
+            for row in res:
+                self.table.appendItem(row, iid=row[0])
 
 
 

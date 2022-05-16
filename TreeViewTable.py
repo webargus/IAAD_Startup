@@ -16,8 +16,10 @@ import tkinter.ttk as ttk
 class TreeViewTable(ttk.Treeview):
 
     def __init__(self, frame, headers):
-        super(TreeViewTable, self).__init__(frame, columns=headers, selectmode='extended')
-        self.grid({"row": 0, "column": 0, "sticky": EW})
+        super(TreeViewTable, self).__init__(frame, columns=headers, selectmode='browse')
+        self.grid({"row": 0, "column": 0, "sticky": NSEW})
+        self.rowconfigure(0, weight=1)
+        self.columnconfigure(0, weight=1)
         #   acrescenta barra de rolagem
         tree_scroll = ttk.Scrollbar(frame, orient=VERTICAL, command=self.yview)
         tree_scroll.grid({"row": 0, "column": 1, "sticky": NS})
@@ -29,8 +31,6 @@ class TreeViewTable(ttk.Treeview):
 
         self.callback_select = None
         self.bind('<<TreeviewSelect>>', self._handle_select)
-        self.callback_right = None
-        self.bind('<3>', self._handle_right_click)
 
     def appendItem(self, data, pos='', iid=None):
         self.insert(pos, 'end', iid, text=data[0], values=data[1:])
@@ -41,18 +41,10 @@ class TreeViewTable(ttk.Treeview):
     def on_select(self, callback):
         self.callback_select = callback
 
-    def on_mouse_right(self, callback):
-        self.callback_right = callback
-
     def _handle_select(self, event):
         if self.callback_select is None:
             return
         self.callback_select(self.get_selection())
-
-    def _handle_right_click(self, event):
-        if self.callback_right is None:
-            return
-        self.callback_right(event)
 
     def get_selection(self):
         selection = self.selection()
