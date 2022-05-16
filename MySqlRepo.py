@@ -1,6 +1,7 @@
 
 
 import mysql.connector as connector
+from tkinter import messagebox
 
 class MySqlRepo:    
     
@@ -18,20 +19,27 @@ class MySqlRepo:
             self.cursor = self.conn.cursor()
             
         except connector.Error as error:
-            self.conn.append_text("Erro: " + error)
+            print(error)
+            self.console.append_text("Erro: {}".format(error))
+            self.popupOk(error)
             
         self.execute("USE `" + database + "`")
 
     def execute (self, query):
         
         try:
+            query
             self.console.append_text("Comando: " + query)
             self.cursor.execute(query)
             return self.cursor.fetchall()
         except connector.Error as error:
-            self.console.append_text("Erro: " + query)
+            self.console.append_text("Erro: {}".format(error))
             return False
     
+    def popupOk(self, error):
+        msg = "Favor verificar:\n"
+        messagebox.showwarning("...Êpa!!", (msg + "\n{}".format(error)))
+
     # def __del__ (self):
     #     self.cursor.close()
     #     self.conn.close()

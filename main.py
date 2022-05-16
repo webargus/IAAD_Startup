@@ -54,22 +54,24 @@ class Gui(Frame):
         combo_label = Label(top_frame, text="Selecione a tabela:")
         combo_label.grid({"row": 0, "column": 0})
         # cria combo
-        tables = self.repo.execute("SHOW TABLES")           # lê nomes das tabelas do BD
-        combo = Combobox(top_frame, values = tables);
-        combo.grid({"row": 0, "column": 1})
-        # attach event listener -> lista tabela selecionada
-        combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(combo.get()))
-        # seleciona a primeira tabela e lista
-        combo.set(tables[0][0])
-        self.listTable(tables[0][0])
+        tables = self.repo.execute("SHOW TABLES")
+        if(tables):          # lê nomes das tabelas do BD
+            combo = Combobox(top_frame, values = tables);
+            combo.grid({"row": 0, "column": 1})
+            # attach event listener -> lista tabela selecionada
+            combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(combo.get()))
+            # seleciona a primeira tabela e lista
+            combo.set(tables[0][0])
+            self.listTable(tables[0][0])
         
         # console_frame.rowconfigure()
         self.mainloop()
         
     def listTable(self, table_name):
         res = self.repo.execute("DESCRIBE " + table_name)
-        # chama o método para listar a tabela com os nomes das colunas 
-        self.table.listTable(table_name, (res[ix][0] for ix in range(0,len(res))))
+        # chama o método para listar a tabela com os nomes das colunas
+        if(res):
+            self.table.listTable(table_name, (res[ix][0] for ix in range(0,len(res))))
 
 if __name__ == '__main__':
     gui = Gui()
