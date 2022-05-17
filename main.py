@@ -48,6 +48,7 @@ class Gui(Frame):
         list_frame.grid({"row": 1, "column": 0, "sticky": NSEW}) # sticky NSEW needed for horz/vert table stretching
         list_frame.rowconfigure(0, weight=1)                     # needed for horz. + vert. treeview table stretching
         list_frame.columnconfigure(0, weight=1)                  # needed for horz. + vert. treeview table stretching
+        # cria widget da listagem
         self.table = ListFrame(list_frame, self.repo)
         
         # cria frame para formulário de edição C.U.D. (Frame F3)
@@ -85,10 +86,24 @@ class Gui(Frame):
             columns = list((res[ix][0] for ix in range(0,len(res))))
             # chama método para listar a tabela com os nomes das colunas
             self.table.listTable(table_name, columns)
+            # attach event listener for table row selection
+            self.table.onRowSelect(self.handleRowSelect)
+
+            # prepara formulário para operações CRUD com a tabela listada
             self.form.setForm(table_name, columns)
+            
+    def handleRowSelect(self, selection):
+        # transfere texto-âncora da treeview (== id da entrada na tabela) para a lista de valores da linha
+        values = selection[0]["values"]
+        values.insert(0, selection[0]["text"])
+        # transfere linha selecionada para F3 (== formulário CRUD)
+        self.form.setFormValues(values)
 
 if __name__ == '__main__':
     gui = Gui()
+
+
+
 
 
 

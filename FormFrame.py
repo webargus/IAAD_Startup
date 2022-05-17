@@ -48,9 +48,15 @@ class FormFrame:
             # inclui label (== nome da coluna)
             Label(wrap_frame, text="{}: ".format(columns[c])).grid(row=c, column=0, sticky="w", pady=2)
             # inclui edit (salvar no array para ler dps)
-            self.edits.append(Entry(wrap_frame).grid(row=c, column=1, sticky="e", pady=2))
+            edit = Entry(wrap_frame)
+            self.edits.append(edit)
+            edit.grid(row=c, column=1, sticky="e", pady=2)
             
-
+    def setFormValues(self, values):
+        print(self.edits)
+        for ix, edit in enumerate(self.edits):
+            edit.delete(0, END)
+            edit.insert(0, values[ix])
             
             
         

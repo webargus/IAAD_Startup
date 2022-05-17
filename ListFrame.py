@@ -31,7 +31,9 @@ class ListFrame():
             for row in res:
                 self.table.appendItem(row, iid=row[0])
 
-
+    def onRowSelect(self, callback):
+        if(self.table is not None):
+            self.table.on_select(callback)
 
 
 
