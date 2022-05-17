@@ -20,7 +20,7 @@ class MySqlRepo:
             
         except connector.Error as error:
             print(error)
-            self.console.append_text("Erro: {}".format(error))
+            self.console.insert_text("Erro: {}".format(error))
             self.popupOk(error)
             
         self.execute("USE `" + database + "`")
@@ -28,12 +28,12 @@ class MySqlRepo:
     def execute (self, query):
         
         try:
-            self.console.append_text("Comando: " + query)
+            self.console.insert_text("Comando: " + query)
             self.cursor.execute(query)
             # self.conn.commit()
             return self.cursor.fetchall()
         except connector.Error as error:
-            self.console.append_text("Erro: {}".format(error))
+            self.console.insert_text("Erro: {}".format(error))
             return False
     
     def popupOk(self, error):

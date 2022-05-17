@@ -56,7 +56,7 @@ class Gui(Frame):
         form_frame.grid({"row": 2, "column": 0, "sticky": NSEW})
         form_frame.rowconfigure(0, weight=1)
         form_frame.columnconfigure(0, weight=1)
-        self.form = FormFrame(form_frame, self.repo)
+        self.form = FormFrame(form_frame, self.repo, self.listTable)
         
         # cria frame no topo da GUI contendo combo com nomes das tabelas (Frame F1)
         top_frame = Frame(self)
@@ -88,8 +88,10 @@ class Gui(Frame):
             # attach event listener for table row selection
             self.table.onRowSelect(self.handleRowSelect)
 
+            # pega os nomes das PKs
+            pks = list((res[x][0] for x in range(0, len(res)) if res[x][3] == 'PRI'))
             # prepara formulário para operações CRUD com a tabela listada
-            self.form.setForm(table_name, columns)
+            self.form.setForm(table_name, columns, pks)
             
     def handleRowSelect(self, selection):
         # transfere texto-âncora da treeview (== id da entrada na tabela) para a lista de valores da linha

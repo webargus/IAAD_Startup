@@ -33,7 +33,7 @@ class TreeViewTable(ttk.Treeview):
         self.bind('<<TreeviewSelect>>', self._handle_select)
 
     def appendItem(self, data, pos='', iid=None):
-        self.insert(pos, 'end', None, text=data[0], values=data[1:])
+        self.insert(pos, 'end', iid, text=data[0], values=data[1:])
 
     def clear(self):
         self.delete(*self.get_children())

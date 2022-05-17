@@ -29,7 +29,7 @@ class ListFrame():
         res = self.repo.execute("SELECT * FROM {}".format(table_name))
         if(res):
             for row in res:
-                self.table.appendItem(row, iid=row[0])
+                self.table.appendItem(row)
 
     def onRowSelect(self, callback):
         if(self.table is not None):

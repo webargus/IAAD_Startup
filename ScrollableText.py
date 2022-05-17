@@ -28,6 +28,9 @@ class ScrollableText(Text):
 
     def append_text(self, text):
         self.insert(END, text + "\n", 'font')
+        
+    def insert_text(self, text):
+        self.insert("0.0", text + "\n", 'font')
 
     def clear(self):
         self.delete('1.0', END)

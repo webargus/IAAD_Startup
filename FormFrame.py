@@ -4,9 +4,10 @@ from tkinter import *
 
 class FormFrame:
     
-    def __init__(self, frame, repo):
+    def __init__(self, frame, repo, callback):
         self.repo = repo
         self.form = None
+        self.callback = callback    # callback para retorno das operações CRUD
         
         # cria frame do formulário com 1 linha e 2 colunas
         self.form_frame = Frame(frame)
@@ -35,9 +36,12 @@ class FormFrame:
             }
         Button(btn_frame, params).grid({"row": 2, "column": 0, "pady": 8})
         
-    def setForm(self, table_name, columns):
-        # salva nome da tabela para operações CRUD
+    def setForm(self, table_name, columns, pks):
+        # salva nome da tabela, colunas e pks para operações CRUD
         self.table_name = table_name
+        self.columns = columns
+        self.pks = pks
+        self.values = None      # usado em CRUD UPDATE
         
         # deleta formulário anterior (se existente)
         if(self.form is not None):
@@ -58,6 +62,8 @@ class FormFrame:
             
     # insere valores (@values) nos edits do formulário
     def setFormValues(self, values):
+        # salvar dados originais pra usar em CRUD UPDATE
+        self.values = self.addQuotes(values)
         for ix, edit in enumerate(self.edits):
             edit.delete(0, END)
             edit.insert(0, values[ix])
@@ -66,27 +72,74 @@ class FormFrame:
     def crudInsert(self):
         data = self.readFormData()
         query = "INSERT INTO {} VALUES({})".format(self.table_name, ",".join(data))
-        print(query)
-        self.repo.execute(query)
+        if self.repo.execute(query) is False:
+            return
+        self.callback(self.table_name)
     
     def crudUpdate(self):
+        # aborta se nenhuma seleção feita
+        if self.values is None:
+            return;
         data = self.readFormData()
+        # pega os campos e valores que mudaram e constrói os pares campo = valor para a cláusula SET
+        print(self.values)
+        set = list(("{} = {}".format(self.columns[x], data[x]) for x in range(0, len(data)) if data[x] != self.values[x]))
+        # aborta se nada mudou
+        if len(set) == 0:
+            return
+        set = ", ".join(set)
+        if len(self.pks) > 0:   # a tabela tem Primary Keys
+            # constrói cláusula WHERE com PKs
+            # pega os valores correspondentes às PKs
+            """
+                OBS.:   o update dá em nada se o usuário mudou o valor da PK para um valor inexistente na tabela;
+                        atualiza a entrada correspondente à PK, se o usuário mudou o valor da PK para uma outra chave
+                        primária existente
+            """
+            where = list((self.values[x] for x in range(0, len(self.columns)) if self.columns[x] in self.pks))
+            # cria os pares pk = valor
+            where = list(("{} = {}".format(self.pks[x], where[x]) for x in range(0, len(self.pks))))
+        else:   # a tabela não tem Primary Keys
+            # constrói a cláusula WHERE com os valores originais
+            where = list(("{} = {}".format(self.columns[x], self.values[x]) for x in range(0, len(self.values))))
+                
+        where = " AND ".join(where)
+        query = "UPDATE {} SET {} WHERE {}".format(self.table_name, set, where)
+        if self.repo.execute(query) is False:
+            return
+        self.callback(self.table_name)
     
     def crudDelete(self):
+        # aborta se formulário em branco
+        if self.values is None:
+            return
         data = self.readFormData()
+        if len(self.pks) == 0:
+            # use todos os valores das colunas na cláusula WHERE se a tabela não tem PKs
+            where = list(("{} = {}".format(self.columns[x], data[x]) for x in range(0, len(data))))
+        else:
+            # pega os valores correspondentes às PKs (valores originais)
+            column_values = list((self.values[x] for x in range(0, len(self.columns)) if self.columns[x] in self.pks))
+            # use os pares (pk, valor) se a tabela tem PKs
+            where = list(("{} = {}".format(self.pks[x], column_values[x]) for x in range(0, len(self.pks))))
+
+        where = " AND ".join(where)
+        query = "DELETE FROM {} WHERE {}".format(self.table_name, where)
+        if self.repo.execute(query) is False:
+            return
+        self.callback(self.table_name)
         
     # lê dados dos edits
     def readFormData(self):
         data = []
-        data.append(self.edits[0].get())
-        for edit in self.edits[1:]:
-            s = edit.get()
-            s.replace('"', '\\"')
-            s.replace("'", "\\'")
-            data.append(r"""'{}'""".format(s))
+        for edit in self.edits:
+            data.append(edit.get())
+        data = self.addQuotes(data)
         print(data)
         return data
 
-
+    # adiciona aspas simples aos elementos da lista @dataList
+    def addQuotes(self, dataList):
+        return list((r"""'{}'""".format(element) for element in dataList))
 
 
