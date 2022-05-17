@@ -75,7 +75,6 @@ class Gui(Frame):
             combo.set(tables[0][0])
             self.listTable(tables[0][0])
         
-        # console_frame.rowconfigure()
         self.mainloop()
         
     def listTable(self, table_name):

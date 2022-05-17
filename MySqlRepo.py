@@ -30,6 +30,7 @@ class MySqlRepo:
         try:
             self.console.append_text("Comando: " + query)
             self.cursor.execute(query)
+            # self.conn.commit()
             return self.cursor.fetchall()
         except connector.Error as error:
             self.console.append_text("Erro: {}".format(error))

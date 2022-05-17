@@ -1,4 +1,5 @@
 
+from ntpath import join
 from tkinter import *
 
 class FormFrame:
@@ -18,23 +19,26 @@ class FormFrame:
         # botão C.
         params = {"text": "INSERIR",
             "width": 10,
-            #"command": self._salvar_aluno
+            "command": self.crudInsert
             }
         Button(btn_frame, params).grid({"row": 0, "column": 0, "pady": 8})
         # botão U.
         params = {"text": "ATUALIZAR",
             "width": 10,
-            #"command": self._salvar_aluno
+            "command": self.crudUpdate
             }
         Button(btn_frame, params).grid({"row": 1, "column": 0, "pady": 8})
         # botão D.
         params = {"text": "DELETAR",
             "width": 10,
-            #"command": self._salvar_aluno
+            "command": self.crudDelete
             }
         Button(btn_frame, params).grid({"row": 2, "column": 0, "pady": 8})
         
     def setForm(self, table_name, columns):
+        # salva nome da tabela para operações CRUD
+        self.table_name = table_name
+        
         # deleta formulário anterior (se existente)
         if(self.form is not None):
             self.form.destroy()
@@ -52,15 +56,36 @@ class FormFrame:
             self.edits.append(edit)
             edit.grid(row=c, column=1, sticky="e", pady=2)
             
+    # insere valores (@values) nos edits do formulário
     def setFormValues(self, values):
-        print(self.edits)
         for ix, edit in enumerate(self.edits):
             edit.delete(0, END)
             edit.insert(0, values[ix])
             
-            
+    # Operação CRUD - inserção
+    def crudInsert(self):
+        data = self.readFormData()
+        query = "INSERT INTO {} VALUES({})".format(self.table_name, ",".join(data))
+        print(query)
+        self.repo.execute(query)
+    
+    def crudUpdate(self):
+        data = self.readFormData()
+    
+    def crudDelete(self):
+        data = self.readFormData()
         
-
+    # lê dados dos edits
+    def readFormData(self):
+        data = []
+        data.append(self.edits[0].get())
+        for edit in self.edits[1:]:
+            s = edit.get()
+            s.replace('"', '\\"')
+            s.replace("'", "\\'")
+            data.append(r"""'{}'""".format(s))
+        print(data)
+        return data
 
 
 
