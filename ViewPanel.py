@@ -28,8 +28,6 @@ class ViewPanel:
         console_frame.grid({"row": 3, "column": 0, "pady": 8, "sticky": EW})
         console_frame.columnconfigure(0, weight=1)              # needed for stretching console horizontally
         self.console = ScrollableText(console_frame)
-        # cria repositório MySql linkado com o console
-        self.repo = MySqlRepo(self.console)
         
         # cria frame para listagem das views do BD (Frame F2)
         list_frame = Frame(frame)
@@ -37,7 +35,7 @@ class ViewPanel:
         list_frame.rowconfigure(0, weight=1)                     # needed for horz. + vert. treeview table stretching
         list_frame.columnconfigure(0, weight=1)                  # needed for horz. + vert. treeview table stretching
         # cria widget da listagem
-        self.table = ListFrame(list_frame, self.repo)
+        self.table = ListFrame(list_frame)
         
         # cria frame para exibir criação da view (Frame F3)
         view_frame = Frame(frame)
@@ -53,38 +51,55 @@ class ViewPanel:
         # rótulo para a combobox
         combo_label = Label(top_frame, text="Selecione a visão:")
         combo_label.grid({"row": 0, "column": 0})
-        # cria combo; lê apenas as tabelas view, não lê as tabelas de base
-        tables = self.repo.execute("SHOW FULL TABLES WHERE table_type = 'VIEW'")
-        if(tables):          # lê nomes das VIEWS do BD
-            tables = list((tables[x][0] for x in range(0, len(tables))))
-            combo = Combobox(top_frame, values = tables);
-            combo.grid({"row": 0, "column": 1})
-            # attach event listener -> lista tabela selecionada
-            combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(combo.get()))
-            # seleciona a primeira VIEW e lista
-            combo.set(tables[0])
-            self.listTable(tables[0])
+        # cria combobox
+        self.combo = Combobox(top_frame);
+        self.combo.grid({"row": 0, "column": 1})
+        # attach event listener -> lista tabela selecionada
+        self.combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(self.combo.get()))
+
+    def initViewPanel(self):
+        tables = MySqlRepo.repo.execute("SHOW FULL TABLES WHERE table_type = 'VIEW'")
+        self.console.insert_text(tables["query"])
+        if(tables["wasError"]):
+            self.console.insert_text(tables["result"])
+        else:
+            tables = tables["result"]
+            if len(tables) > 0:
+                # lê nomes das VIEWS do BD
+                tables = list((tables[x][0] for x in range(0, len(tables))))
+                # insere nomes das views no combo
+                self.combo["values"] = tables
+                # seleciona a primeira VIEW e lista
+                self.combo.set(tables[0])
+                self.listTable(tables[0])
                 
     def listTable(self, table_name):
         # mostra comando de criação da view
         self.showCreateView(table_name)
         
         # executa consulta pra pegar nomes das colunas da tabela
-        res = self.repo.execute("DESCRIBE " + table_name)
-        if(res):
+        res = MySqlRepo.repo.execute("DESCRIBE " + table_name)
+        self.console.insert_text(res["query"])
+        if(res["wasError"]):
+            self.console.insert_text(res["result"])
+        else:
             # pega só nomes das colunas do resultado da consulta
+            res = res["result"]
             columns = list((res[ix][0] for ix in range(0,len(res))))
             # chama método para listar a tabela com os nomes das colunas
             self.table.listTable(table_name, columns)
 
     # mostra comando de criação da view
     def showCreateView(self, table_name):
-        res = self.repo.execute("SHOW CREATE VIEW `{}`".format(table_name))
-        if(res):
+        res = MySqlRepo.repo.execute("SHOW CREATE VIEW `{}`".format(table_name))
+        self.console.insert_text(res["query"])
+        if(res["wasError"]):
+            self.console.insert_text(res["result"])
+        else:
             # limpa área de texto
             self.view_create.clear()
             # copia comando de criação da view para a área de texto (F3)
-            self.view_create.insert_text(res[0][1])
+            self.view_create.insert_text(res["result"][0][1])
 
 
 

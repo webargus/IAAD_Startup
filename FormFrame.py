@@ -8,12 +8,13 @@
 
 from tkinter import *
 
+from MySqlRepo import MySqlRepo
+
 class FormFrame:
     
-    def __init__(self, frame, repo, callback):
-        self.repo = repo
+    def __init__(self, frame, crudPanel):
         self.form = None
-        self.callback = callback    # callback para retorno das operações CRUD
+        self.crudPanel = crudPanel    # callback para retorno das operações CRUD
         
         # cria frame do formulário com 1 linha e 2 colunas
         self.form_frame = Frame(frame)
@@ -78,9 +79,13 @@ class FormFrame:
     def crudInsert(self):
         data = self.readFormData()
         query = "INSERT INTO {} VALUES({})".format(self.table_name, ",".join(data))
-        if self.repo.execute(query) is False:
-            return
-        self.callback(self.table_name)
+        res = MySqlRepo.repo.execute(query)
+        self.crudPanel.console.insert_text(res["query"])
+        if res["wasError"]:
+            print(res["result"])
+            self.crudPanel.console.insert_text(res["result"])
+        else:
+            self.crudPanel.listTable(self.table_name)
     
     def crudUpdate(self):
         # aborta se nenhuma seleção feita
@@ -111,9 +116,12 @@ class FormFrame:
                 
         where = " AND ".join(where)
         query = "UPDATE {} SET {} WHERE {}".format(self.table_name, set, where)
-        if self.repo.execute(query) is False:
-            return
-        self.callback(self.table_name)
+        res = MySqlRepo.repo.execute(query)
+        self.crudPanel.console.insert_text(res["query"])
+        if res["wasError"]:
+            self.crudPanel.console.insert_text(res["result"])
+        else:
+            self.crudPanel.listTable(self.table_name)
     
     def crudDelete(self):
         # aborta se formulário em branco
@@ -131,9 +139,12 @@ class FormFrame:
 
         where = " AND ".join(where)
         query = "DELETE FROM {} WHERE {}".format(self.table_name, where)
-        if self.repo.execute(query) is False:
-            return
-        self.callback(self.table_name)
+        res = MySqlRepo.repo.execute(query)
+        self.crudPanel.console.insert_text(res["query"])
+        if res["wasError"]:
+             self.crudPanel.console.insert_text(res["result"])
+        else:
+            self.crudPanel.listTable(self.table_name)
         
     # lê dados dos edits
     def readFormData(self):

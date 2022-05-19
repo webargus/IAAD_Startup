@@ -27,8 +27,6 @@ class CRUDPanel:
         console_frame.grid({"row": 3, "column": 0, "pady": 8, "sticky": EW})
         console_frame.columnconfigure(0, weight=1)              # needed for stretching console horizontally
         self.console = ScrollableText(console_frame)
-        # cria repositório MySql linkado com o console
-        self.repo = MySqlRepo(self.console)
         
         # cria frame para listagem das tabelas do BD (Frame F2)
         list_frame = Frame(frame)
@@ -36,14 +34,15 @@ class CRUDPanel:
         list_frame.rowconfigure(0, weight=1)                     # needed for horz. + vert. treeview table stretching
         list_frame.columnconfigure(0, weight=1)                  # needed for horz. + vert. treeview table stretching
         # cria widget da listagem
-        self.table = ListFrame(list_frame, self.repo)
+        self.table = ListFrame(list_frame)
         
         # cria frame para formulário de edição C.U.D. (Frame F3)
         form_frame = Frame(frame)
         form_frame.grid({"row": 2, "column": 0, "sticky": NSEW})
         form_frame.rowconfigure(0, weight=1)
         form_frame.columnconfigure(0, weight=1)
-        self.form = FormFrame(form_frame, self.repo, self.listTable)
+        # passa param self pra callbacks 
+        self.form = FormFrame(form_frame, self)
         
         # cria frame no topo da GUI contendo combo com nomes das tabelas (Frame F1)
         top_frame = Frame(frame)
@@ -52,22 +51,37 @@ class CRUDPanel:
         combo_label = Label(top_frame, text="Selecione a tabela:")
         combo_label.grid({"row": 0, "column": 0})
         # cria combo; lê apenas as tabelas base, não lê as views
-        tables = self.repo.execute("SHOW FULL TABLES WHERE table_type = 'BASE TABLE'")
-        if(tables):          # lê nomes das tabelas do BD
-            tables = list((tables[x][0] for x in range(0, len(tables))))
-            combo = Combobox(top_frame, values = tables);
-            combo.grid({"row": 0, "column": 1})
-            # attach event listener -> lista tabela selecionada
-            combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(combo.get()))
-            # seleciona a primeira tabela e lista
-            combo.set(tables[0])
-            self.listTable(tables[0])
-                
+        self.combo = Combobox(top_frame);
+        self.combo.grid({"row": 0, "column": 1})
+        # attach event listener -> lista tabela selecionada
+        self.combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(self.combo.get()))
+
+    def initCRUDPanel(self):
+        tables = MySqlRepo.repo.execute("SHOW FULL TABLES WHERE table_type = 'BASE TABLE'")
+        # output comando p/ console GUI
+        self.console.insert_text(tables["query"])
+        if(tables["wasError"]):
+            self.console.insert_text(tables["result"])
+        else:
+            tables = tables["result"]
+            if len(tables) > 0:
+                # lê só os nomes das tabelas do BD e ignora o resto
+                tables = list((tables[x][0] for x in range(0, len(tables))))
+                self.combo["values"] = tables
+                # seleciona a primeira tabela e lista
+                self.combo.set(tables[0])
+                self.listTable(tables[0])
+
     def listTable(self, table_name):
         # executa consulta pra pegar nomes das colunas da tabela
-        res = self.repo.execute("DESCRIBE " + table_name)
-        if(res):
+        res = MySqlRepo.repo.execute("DESCRIBE " + table_name)
+        # output query p/ console GUI
+        self.console.insert_text(res["query"])
+        if(res["wasError"]):
+            self.console.insert_text(res["result"])
+        else:
             # pega só nomes das colunas do resultado da consulta
+            res = res["result"]
             columns = list((res[ix][0] for ix in range(0,len(res))))
             # chama método para listar a tabela com os nomes das colunas
             self.table.listTable(table_name, columns)

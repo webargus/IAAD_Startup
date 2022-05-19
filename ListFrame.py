@@ -8,14 +8,15 @@
 """
 
 from tkinter import *
+from MySqlRepo import MySqlRepo
+from tkinter import messagebox
 from TreeViewTable import *
 
 class ListFrame():
 
-    def __init__(self, frame, repo):
+    def __init__(self, frame):
 
         self.frame = frame
-        self.repo = repo
         self.table = None
 
     def listTable(self, table_name, columns):
@@ -27,9 +28,11 @@ class ListFrame():
         self.table = TreeViewTable(self.frame, columns)
         
         # insere dados
-        res = self.repo.execute("SELECT * FROM {}".format(table_name))
-        if(res):
-            for row in res:
+        res = MySqlRepo.repo.execute("SELECT * FROM {}".format(table_name))
+        if(res["wasError"]):
+            messagebox.showwarning("...Êpa!!", ("Erro: {}\n Comando:{}\n".format(res["result"], res["query"])))
+        else:
+            for row in res["result"]:
                 self.table.appendItem(row)
 
     # define callback pra chamar qdo seleciona linha da tabela
