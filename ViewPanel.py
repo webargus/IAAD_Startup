@@ -1,4 +1,12 @@
 
+"""
+    Class ViewPanel
+    Cria painel (frame) para listar as views do BD, bem como seus comandos de criação
+    Autor: grupo UFRPE - BSI - IAAD - 2022
+    ISENÇÃO DE RESPONSABILIDADE: o risco do uso é todo seu!
+    Licença: use e/ou modifique o código à vontade, mas não apague esse cabeçalho.
+"""
+
 import imp
 from tkinter import *
 from tkinter.ttk import *
@@ -50,7 +58,6 @@ class ViewPanel:
         if(tables):          # lê nomes das VIEWS do BD
             tables = list((tables[x][0] for x in range(0, len(tables))))
             combo = Combobox(top_frame, values = tables);
-            print(tables)
             combo.grid({"row": 0, "column": 1})
             # attach event listener -> lista tabela selecionada
             combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(combo.get()))
@@ -76,7 +83,7 @@ class ViewPanel:
         if(res):
             # limpa área de texto
             self.view_create.clear()
-            print(res[0][1])
+            # copia comando de criação da view para a área de texto (F3)
             self.view_create.insert_text(res[0][1])
 
 

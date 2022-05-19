@@ -1,4 +1,12 @@
 
+"""
+    Class CRUDPanel
+    Cria painel (frame) para listar as tabelas do BD e executar operações CRUD nessas tabelas
+    Autor: grupo UFRPE - BSI - IAAD - 2022
+    ISENÇÃO DE RESPONSABILIDADE: o risco do uso é todo seu!
+    Licença: use e/ou modifique o código à vontade, mas não apague esse cabeçalho.
+"""
+
 from tkinter import *
 from tkinter.ttk import *
 from MySqlRepo import *
@@ -48,7 +56,6 @@ class CRUDPanel:
         if(tables):          # lê nomes das tabelas do BD
             tables = list((tables[x][0] for x in range(0, len(tables))))
             combo = Combobox(top_frame, values = tables);
-            print(tables)
             combo.grid({"row": 0, "column": 1})
             # attach event listener -> lista tabela selecionada
             combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(combo.get()))

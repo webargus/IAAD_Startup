@@ -1,13 +1,12 @@
 """
-    Description:
-        Static reference to main window, including method to center window on screen
-    Author:
-        Group UFRPE - BSI - IAAD  - 2022.1
-    License:
-        keep this header in your copy and feel free to mess up with this code as you please;
-        accretions and improvements are more than welcome! :)
-    Disclaimer:
-        Use it at your own risk!
+    Descrição:
+        Referência estática à janela principal incluindo método para centrar a janela na tela
+    Autor:
+        Grupo UFRPE - BSI - IAAD  - 2022.1
+    Licença:
+        mantenha esse cabeçalho no seu código e sinta-se à vontade pra bagunçar este código
+    ISENÇÃO DE RESPONSABILIDADE:
+        O risco do uso é todo seu!
 """
 
 class Tools:
@@ -22,11 +21,11 @@ class Tools:
         Tools._screen_width = win.winfo_screenwidth()
         Tools._screen_height = win.winfo_screenheight()
 
-    # center window on client view
+    # centra janela na tela (client view)
     @staticmethod
     def center_window(win, width, height):
-        # call update_idletasks before retrieving any geometry,
-        # to ensure that the values returned are accurate
+        # chama update_idletasks antes de capturar a geometria,
+        # para garantir que os resultados retornados estão corretos
         win.update_idletasks()
         x = (Tools._screen_width // 2) - (width // 2)
         y = (Tools._screen_height // 2) - (height // 2)

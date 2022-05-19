@@ -1,9 +1,10 @@
 
 """
     Class ListFrame
-    Authors: group UFRPE - BSI - IAAD - 2022
-    Disclaimer: use it on your own risk!
-    License: feel free to mess up with it at will, provided you display this header in your code!
+    Usa a classe TreeViewTable para listar as tabelas do BD
+    Autor: grupo UFRPE - BSI - IAAD - 2022
+    ISENÇÃO DE RESPONSABILIDADE: o risco do uso é todo seu!
+    Licença: use e/ou modifique o código à vontade, mas não apague esse cabeçalho.
 """
 
 from tkinter import *
@@ -31,6 +32,7 @@ class ListFrame():
             for row in res:
                 self.table.appendItem(row)
 
+    # define callback pra chamar qdo seleciona linha da tabela
     def onRowSelect(self, callback):
         if(self.table is not None):
             self.table.on_select(callback)

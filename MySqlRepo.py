@@ -1,8 +1,23 @@
 
+"""
+    *************************************************************************
+    *                                                                       *
+    *   class MySqlRepo                                                     *
+    *   provê conexão com BD usando o conector MySql pra Python que deve já *
+    *   estar instalado na máquina do aplicativo que for usar a conexão     *
+    *   download: https://dev.mysql.com/downloads/connector/python/         *
+    *                                                                       *
+    *   ISENÇÃO DE RESPONSABILIDADE: o risco do uso é todo seu!             *
+    *                                                                       *
+    *   Autor: Grupo UFRPE - BSI - IAAD 2022.1                              *
+    *                                                                       *
+    *************************************************************************
+"""
 
 import mysql.connector as connector
 from tkinter import messagebox
 
+    
 class MySqlRepo:    
     
     def __init__(self, console, host = "localhost", username = "iaad", password = "123456", database="Startups"):
@@ -19,10 +34,14 @@ class MySqlRepo:
             self.cursor = self.conn.cursor()
             
         except connector.Error as error:
+            # imprime erro no console da IDE
             print(error)
+            # apresenta erro na GUI
             self.console.insert_text("Erro: {}".format(error))
+            # exibe erro em popup antes de abortar caso tenha havido falha na conexão com o BD
             self.popupOk(error)
             
+        # seleciona o BD pra usar no programa
         self.execute("USE `" + database + "`")
 
     def execute (self, query):

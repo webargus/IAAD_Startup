@@ -17,14 +17,19 @@ class Gui(Frame):
 
     def __init__(self):
         
+        # inicializa pai
         Frame.__init__(self)
+        
+        # centra janela na tela
         Tools.Tools.root(self.master)
         Tools.Tools.center_window(self.master, 1120, 600)
+        # ícone UFRPE
         if ( sys.platform.startswith('win')): 
             self.master.iconbitmap('brasao32.ico')
         else:
             logo = PhotoImage(file='brasao.png')
             self.master.call('wm', 'iconphoto', self.master._w, logo)
+        # config janela
         self.master.resizable(0, 0)
         self.master.state('normal')
         self.master.title("IAAD - Startups")
@@ -35,15 +40,17 @@ class Gui(Frame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
+        # usando widget Notebook do tkinter pra criar abas
         n = Notebook(self)
         f1 = Frame(n)   # frame p/ CRUD
         f2 = Frame(n)   # frame p/ View
         
-        #   acrescenta abas
+        # acrescenta abas
         n.add(f1, text='CRUD')
         n.add(f2, text='Views')
         n.grid({"row": 0, "column": 0, "sticky": NSEW})
         
+        # inicializa abas
         CRUDPanel(f1)
         ViewPanel(f2)
 

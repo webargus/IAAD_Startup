@@ -1,5 +1,11 @@
+"""
+    Class FormFrame
+    Cria formulário dinâmicamente para as operações CRUD em uma tabela do BD
+    Autor: grupo UFRPE - BSI - IAAD - 2022
+    ISENÇÃO DE RESPONSABILIDADE: o risco do uso é todo seu!
+    Licença: use e/ou modifique o código à vontade, mas não apague esse cabeçalho.
+"""
 
-from ntpath import join
 from tkinter import *
 
 class FormFrame:
