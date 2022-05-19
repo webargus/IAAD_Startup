@@ -40,9 +40,9 @@ class MySqlRepo:
         msg = "Favor verificar:\n"
         messagebox.showwarning("...Êpa!!", (msg + "\n{}".format(error)))
 
-    # def __del__ (self):
-    #     self.cursor.close()
-    #     self.conn.close()
+    def __del__ (self):
+        self.cursor.close()
+        self.conn.close()
 
 
 
