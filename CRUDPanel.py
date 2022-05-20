@@ -57,7 +57,7 @@ class CRUDPanel:
         self.combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(self.combo.get()))
 
     def initCRUDPanel(self):
-        tables = MySqlRepo.repo.execute("SHOW FULL TABLES WHERE table_type = 'BASE TABLE'")
+        tables = MySqlRepo.repo.execute("SHOW FULL TABLES WHERE table_type = 'BASE TABLE'", True)
         # output comando p/ console GUI
         self.console.insert_text(tables["query"])
         if(tables["wasError"]):
@@ -74,7 +74,7 @@ class CRUDPanel:
 
     def listTable(self, table_name):
         # executa consulta pra pegar nomes das colunas da tabela
-        res = MySqlRepo.repo.execute("DESCRIBE " + table_name)
+        res = MySqlRepo.repo.execute("DESCRIBE " + table_name, True)
         # output query p/ console GUI
         self.console.insert_text(res["query"])
         if(res["wasError"]):

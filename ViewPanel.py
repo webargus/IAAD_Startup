@@ -58,7 +58,7 @@ class ViewPanel:
         self.combo.bind("<<ComboboxSelected>>", lambda event: self.listTable(self.combo.get()))
 
     def initViewPanel(self):
-        tables = MySqlRepo.repo.execute("SHOW FULL TABLES WHERE table_type = 'VIEW'")
+        tables = MySqlRepo.repo.execute("SHOW FULL TABLES WHERE table_type = 'VIEW'", True)
         self.console.insert_text(tables["query"])
         if(tables["wasError"]):
             self.console.insert_text(tables["result"])
@@ -78,7 +78,7 @@ class ViewPanel:
         self.showCreateView(table_name)
         
         # executa consulta pra pegar nomes das colunas da tabela
-        res = MySqlRepo.repo.execute("DESCRIBE " + table_name)
+        res = MySqlRepo.repo.execute("DESCRIBE " + table_name, True)
         self.console.insert_text(res["query"])
         if(res["wasError"]):
             self.console.insert_text(res["result"])
@@ -91,7 +91,7 @@ class ViewPanel:
 
     # mostra comando de criação da view
     def showCreateView(self, table_name):
-        res = MySqlRepo.repo.execute("SHOW CREATE VIEW `{}`".format(table_name))
+        res = MySqlRepo.repo.execute("SHOW CREATE VIEW `{}`".format(table_name), True)
         self.console.insert_text(res["query"])
         if(res["wasError"]):
             self.console.insert_text(res["result"])

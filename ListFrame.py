@@ -28,7 +28,7 @@ class ListFrame():
         self.table = TreeViewTable(self.frame, columns)
         
         # insere dados
-        res = MySqlRepo.repo.execute("SELECT * FROM {}".format(table_name))
+        res = MySqlRepo.repo.execute("SELECT * FROM {}".format(table_name), True)
         if(res["wasError"]):
             messagebox.showwarning("...Êpa!!", ("Erro: {}\n Comando:{}\n".format(res["result"], res["query"])))
         else:

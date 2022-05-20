@@ -93,7 +93,6 @@ class FormFrame:
             return;
         data = self.readFormData()
         # pega os campos e valores que mudaram e constrói os pares campo = valor para a cláusula SET
-        print(self.values)
         set = list(("{} = {}".format(self.columns[x], data[x]) for x in range(0, len(data)) if data[x] != self.values[x]))
         # aborta se nada mudou
         if len(set) == 0:
@@ -152,7 +151,6 @@ class FormFrame:
         for edit in self.edits:
             data.append(edit.get())
         data = self.addQuotes(data)
-        print(data)
         return data
 
     # adiciona aspas simples aos elementos da lista @dataList

@@ -40,19 +40,23 @@ class MySqlRepo:
         MySqlRepo.repo = self
         
         # seleciona o BD pra usar no programa
-        return self.execute("USE `" + database + "`")
-       
+        query = "USE `" + database + "`"
+        return self.execute(query)       
         
     # executa comando/consulta
-    def execute (self, query):
+    def execute (self, query, wantResult = False):
         
         try:
             self.cursor.execute(query)
+            # pega resultado se esperado
+            result = ""
+            if wantResult:
+                result = self.cursor.fetchall()
             # retorna dicionário com resultado se a consulta/comando teve sucesso
-            return {"wasError": False, "query": "Comando: {}".format(query), "result": self.cursor.fetchall()}
+            return {"wasError": False, "query": "Comando: {}".format(query), "result": result}
         except connector.Error as error:
             # retorna dicionário com descrição do erro se a consulta/comando falhou
-            return {"wasError": True, "query": "Comando: {}".format(query), "result": "Erro: {}".format(error)}
+            return {"wasError": True, "query": "Comando: {}".format(query), "result": "Erro: {}".format(error)}        
 
     # fecha cursor e conexão antes de o garbage collector deletar o obj
     def __del__ (self):
