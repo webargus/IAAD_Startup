@@ -12,11 +12,8 @@ class LoginDialog(Toplevel):
         # desabilita acesso à janela principal
         parent.grab_set()
         # ícone UFRPE
-        if (sys.platform.startswith('win')): 
-            self.top.tk.iconbitmap('brasao32.ico')
-        else:
-            logo = PhotoImage(file='brasao.png')
-            self.top.tk.call('wm', 'iconphoto', self.top._w, logo)
+        logo = PhotoImage(file='brasao.png')
+        self.top.tk.call('wm', 'iconphoto', self.top._w, logo)
         # config diálogo e centra na tela
         self.parent = parent
         self.top.resizable(False, False)
