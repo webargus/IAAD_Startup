@@ -76,3 +76,28 @@ IF NEW.genero not in ('M', 'F')  THEN
 END IF;
 END $$
 DELIMITER ;
+
+
+CREATE VIEW contagem_funcionarios
+AS
+select s.nome_startup as startup, count(p.nome_programador) as count from startup s left outer join programador p on p.id_startup=s.id_startup group by s.nome_startup;
+
+CREATE VIEW contagem_homens
+AS
+select s.nome_startup as startup, count(p.nome_programador) as Homens from startup s left join programador p on p.genero='M' and p.id_startup=s.id_startup group by s.nome_startup;
+
+CREATE VIEW contagem_mulheres
+AS
+select s.nome_startup as startup, count(p.nome_programador) as Mulheres from startup s left join programador p on p.genero='F' and p.id_startup=s.id_startup group by s.nome_startup;
+
+CREATE VIEW contagem_programadoreslinguagem 
+AS
+SELECT LP.id_linguagem,
+       LP.nome_linguagem,
+       COUNT(PL.id_programador)  AS numero_de_programadores
+FROM linguagem_programacao AS LP
+JOIN programador_linguagem AS PL ON LP.id_linguagem = PL.id_linguagem 
+JOIN programador AS P ON P.id_programador = PL.id_programador
+GROUP BY LP.id_linguagem;
+
+

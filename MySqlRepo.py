@@ -54,7 +54,7 @@ class MySqlRepo:
             # retorna dicionário com descrição do erro se a consulta/comando falhou
             return {"wasError": True, "query": "Comando: {}".format(query), "result": "Erro: {}".format(error)}
 
-    # fecha cursor e conexão antes de o garbage collector deletar obj
+    # fecha cursor e conexão antes de o garbage collector deletar o obj
     def __del__ (self):
         if self.conn is not None:
             self.cursor.close()
