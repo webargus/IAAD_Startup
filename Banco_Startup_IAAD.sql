@@ -100,4 +100,16 @@ JOIN programador_linguagem AS PL ON LP.id_linguagem = PL.id_linguagem
 JOIN programador AS P ON P.id_programador = PL.id_programador
 GROUP BY LP.id_linguagem;
 
+DELIMITER $$
+CREATE TRIGGER atualiza_genero
+BEFORE UPDATE ON programador
+FOR EACH ROW
+BEGIN
+IF NEW.genero not in ('M', 'F')  THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Caracter inválido para gênero. Utilize M ou F.';
+END IF;
+END $$
+DELIMITER 
+
+
 
